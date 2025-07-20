@@ -66,6 +66,26 @@ def main():
 
     send_to_telegram(f"🎉 Đã lọc xong! Tổng proxy sống: {len(live_proxies)}")
     print("🔥 Gửi về Telegram thành công.")
+import requests
+
+# 🔧 Thay thế bằng token và ID chat của bạn
+TOKEN = '7867549488:AAFIKFCXa1oVeJDG6pqWoauizyfnBiCE4E4'
+CHAT_ID = '6476532822'
+
+def send_file_to_telegram(filename, caption=None):
+    url = f'https://api.telegram.org/bot{TOKEN}/sendDocument'
+    with open(filename, 'rb') as f:
+        files = {'document': f}
+        data = {'chat_id': CHAT_ID, 'caption': caption or filename}
+        r = requests.post(url, files=files, data=data)
+        print(f'📦 Sent {filename}, status: {r.status_code}')
+
+# 🧾 Gửi các file proxy nếu tồn tại
+for file_name in ['proxy_http.txt', 'proxy_socks4.txt', 'proxy_socks5.txt']:
+    try:
+        send_file_to_telegram(file_name, caption=f'🔌 Proxy list: {file_name}')
+    except Exception as e:
+        print(f'❌ Error sending {file_name}: {e}')
 
 if __name__ == "__main__":
     main()
